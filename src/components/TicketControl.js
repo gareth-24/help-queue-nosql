@@ -3,6 +3,9 @@ import NewTicketForm from './NewTicketForm';
 import TicketList from './TicketList';
 import EditTicketForm from './EditTicketForm';
 import TicketDetail from './TicketDetail';
+// new import!
+import db from './../firebase.js';
+import { collection, addDoc } from "firebase/firestore";
 
 function TicketControl() {
 
@@ -45,12 +48,13 @@ function TicketControl() {
     setSelectedTicket(null);
   }
 
-  const handleAddingNewTicketToList = (newTicket) => {
-    // new code!
-    const newMainTicketList = mainTicketList.concat(newTicket);
-    // new code!
-    setMainTicketList(newMainTicketList);
-    setFormVisibleOnPage(false)
+  const handleAddingNewTicketToList = async (newTicketData) => {
+    // async function allows us to add a new doc to a specified collection
+    // within the firestore database
+    await addDoc(collection(db, "tickets"), newTicketData);
+    // collection() takes Firestore db instance and name of collection as arguments
+    // addDoc() takes collection reference and data to be added (as a JS object) as arguments
+    setFormVisibleOnPage(false);
   }
 
   const handleChangingSelectedTicket = (id) => {
